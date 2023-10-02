@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
 
 @Component({
   selector: 'app-root',
@@ -8,23 +9,20 @@ import { Observable } from 'rxjs/Observable';
 })
 export class AppComponent {
   title = 'app';
-  observable$;
+  mySubject$;
 
   ngOnInit() {
-    this.observable$ = Observable.create((observer) => {
-      observer.next(1);
-      observer.next(2);
-      observer.next(3);
-      observer.complete();
-    });
-    this.observable$.subscribe(
-      value => console.log(value),
-      err => {},
-      () => console.log('this is the end')
-    );
+    this.mySubject$ = new Subject();
+    this.mySubject$.subscribe(x => console.log('first subscribe', x));
+    this.mySubject$.next(1);
+    this.mySubject$.next(2);
+    // this.mySubject$.complete();
+    this.mySubject$.unsubscribe();
+    this.mySubject$.subscribe(x => console.log('second subscribe', x));
+    this.mySubject$.next(3);
   }
 
   ngOnDestroy() {
-    this.observable$.unsubscribe();
+    this.mySubject$.unsubscribe();
   }
 }
