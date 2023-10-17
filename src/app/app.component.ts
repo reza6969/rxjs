@@ -2,8 +2,10 @@ import { Component } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
 import 'rxjs/add/observable/interval';
+import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/take';
 import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/operator/filter';
 // import { take } from 'rxjs/take';
 
@@ -26,14 +28,13 @@ export class AppComponent {
     // this.mySubject$.subscribe(x => console.log('second subscribe', x));
     // this.mySubject$.next(3);
     const number$ = Observable.interval(1000);
+    const letters$ = Observable.of('a', 'b', 'c', 'd', 'e');
 
-    number$
-      .take(5)
-      // .filter(x => x > 20) //0
-      // .filter(x => x % 2 === 0) //1
-      .map(x => x * 10)
-      .filter(x => x % 2 === 0) //2
-      .subscribe(x => console.log(x));
+    letters$.mergeMap(x =>
+      number$
+        .take(5)
+        .map(i => i + x) 
+    ).subscribe(x => console.log(x));
   }
 
   ngOnDestroy() {
