@@ -5,7 +5,7 @@ import 'rxjs/add/observable/interval';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/take';
 import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/mergeMap';
+import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/filter';
 // import { take } from 'rxjs/take';
 
@@ -30,7 +30,7 @@ export class AppComponent {
     const number$ = Observable.interval(1000);
     const letters$ = Observable.of('a', 'b', 'c', 'd', 'e');
 
-    letters$.mergeMap(x =>
+    letters$.switchMap(x =>
       number$
         .take(5)
         .map(i => i + x) 
