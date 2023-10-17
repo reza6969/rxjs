@@ -4,6 +4,7 @@ import { ReplaySubject } from 'rxjs/ReplaySubject';
 import 'rxjs/add/observable/interval';
 import 'rxjs/add/operator/take';
 import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/filter';
 // import { take } from 'rxjs/take';
 
 @Component({
@@ -28,7 +29,8 @@ export class AppComponent {
 
     number$
       .take(5)
-      .map(x => x*10 )
+      .map(x => x * 10)
+      .filter(x => x > 20)
       .subscribe(x => console.log(x));
   }
 
