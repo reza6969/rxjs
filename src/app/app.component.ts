@@ -29,8 +29,10 @@ export class AppComponent {
 
     number$
       .take(5)
+      // .filter(x => x > 20) //0
+      // .filter(x => x % 2 === 0) //1
       .map(x => x * 10)
-      .filter(x => x > 20)
+      .filter(x => x % 2 === 0) //2
       .subscribe(x => console.log(x));
   }
 
