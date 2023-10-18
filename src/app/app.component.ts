@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
+import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/observable/interval';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/take';
@@ -9,6 +10,7 @@ import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/filter';
 // import { take } from 'rxjs/take';
 import 'rxjs/add/observable/fromEvent';
+import 'rxjs/add/operator/debounceTime';
 
 @Component({
   selector: 'app-root',
@@ -18,6 +20,7 @@ import 'rxjs/add/observable/fromEvent';
 export class AppComponent {
   title = 'app';
   mySubject$;
+  searchSubject$ = new Subject<string>();
 
   ngOnInit() {
     // this.mySubject$ = new ReplaySubject();
@@ -38,6 +41,15 @@ export class AppComponent {
     ).subscribe(x => console.log(x));
 
     Observable.fromEvent(document, 'click').subscribe(x => console.log(x));
+
+    this.searchSubject$
+      .debounceTime(200)
+      .subscribe(x => console.log('debounced: ', x));
+  }
+
+  inputChanged($event) {
+    console.log('input changed', $event);
+    this.searchSubject$.next($event);
   }
 
   ngOnDestroy() {
