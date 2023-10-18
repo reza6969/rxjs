@@ -8,6 +8,7 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/filter';
 // import { take } from 'rxjs/take';
+import 'rxjs/add/observable/fromEvent';
 
 @Component({
   selector: 'app-root',
@@ -35,6 +36,8 @@ export class AppComponent {
         .take(5)
         .map(i => i + x) 
     ).subscribe(x => console.log(x));
+
+    Observable.fromEvent(document, 'click').subscribe(x => console.log(x));
   }
 
   ngOnDestroy() {
