@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { Subject } from 'rxjs/Subject';
@@ -11,6 +12,8 @@ import 'rxjs/add/operator/filter';
 // import { take } from 'rxjs/take';
 import 'rxjs/add/observable/fromEvent';
 import 'rxjs/add/operator/debounceTime';
+import 'rxjs/add/operator/distinctUntilChanged';
+import 'rxjs/add/operator/do';
 
 @Component({
   selector: 'app-root',
@@ -21,6 +24,9 @@ export class AppComponent {
   title = 'app';
   mySubject$;
   searchSubject$ = new Subject<string>();
+  results$: Observable<any>;
+
+  constructor(private http: HttpClient ){}
 
   ngOnInit() {
     // this.mySubject$ = new ReplaySubject();
@@ -40,11 +46,18 @@ export class AppComponent {
         .map(i => i + x) 
     ).subscribe(x => console.log(x));
 
-    Observable.fromEvent(document, 'click').subscribe(x => console.log(x));
+    // Observable.fromEvent(document, 'click').subscribe(x => console.log(x));
 
-    this.searchSubject$
+    this.results$ = this.searchSubject$
       .debounceTime(200)
-      .subscribe(x => console.log('debounced: ', x));
+      .distinctUntilChanged()
+      .do(x => console.log('do', x))
+      .switchMap(searchString => this.queryAPI(searchString))
+  }
+
+  queryAPI(searchString){
+    console.log('queryAPI', searchString);
+    return this.http.get(`https://www.reddit.com/r/aww/search.json?q=${searchString}`).map(result => result['data']['children'])
   }
 
   inputChanged($event) {
